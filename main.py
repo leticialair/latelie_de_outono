@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pandas as pd
 import sys
@@ -9,7 +10,7 @@ from unidecode import unidecode
 sys.path.append(os.getcwd())
 from classes.class_image_creation import ImageCreation
 
-semana = "semana1"
+semana = "semana2"
 alunos = pd.read_excel("alunos.xlsx")
 
 # Removendo acentos e caracteres especiais
@@ -21,15 +22,18 @@ alunos["Nome para o Cartão de Conquistas"] = (
 )
 
 # Padronizando colunas de flag
-atividade_columns = ["Atividade 1"]
+atividade_columns = ["Atvd. 1"]
 for column in atividade_columns:
     alunos[column] = alunos[column].astype(str).str.upper().str.strip()
+    # Transformando NAN em NÃO
+    alunos[column] = np.where(alunos[column] == "NAN", "NÃO", alunos[column])
 
 # Criando uma coluna padronizada de flag
 alunos["flag"] = (
-    alunos["Atividade 1"]
-    # + alunos["Atividade 2"]
+    alunos["Atvd. 1"]
+    # + alunos["Atvd. 2"]
 )
+
 
 # Convert "open" links to "uc" links for direct download
 alunos["Foto para o Cartão de Conquistas"] = alunos[
@@ -38,6 +42,7 @@ alunos["Foto para o Cartão de Conquistas"] = alunos[
 alunos["Foto para o Cartão de Conquistas"] = (
     alunos["Foto para o Cartão de Conquistas"] + "&export=download"
 )
+
 
 # Process each student
 for email in alunos["E-mail"].unique():
@@ -50,19 +55,15 @@ for email in alunos["E-mail"].unique():
         foto = alunos[alunos["E-mail"] == email][
             "Foto para o Cartão de Conquistas"
         ].values[0]
-        # TODO: Alterar
-        total_palavras = 0
-        # total_palavras = alunos[alunos["E-mail"] == email]["TOTAL DE PALAVRAS"].values[
-        #     0
-        # ]
-        # flg = alunos[alunos["E-mail"] == email]["flag"].values[0]
-        # flg_1 = alunos[alunos["E-mail"] == email]["Atividade 1"].values[0]
+        total_palavras = alunos[alunos["E-mail"] == email]["TOTAL DE PALAVRAS"].values[
+            0
+        ]
+        flg = alunos[alunos["E-mail"] == email]["flag"].values[0]
+        flg_1 = alunos[alunos["E-mail"] == email]["Atvd. 1"].values[0]
 
-        # list_flg = []
-        # list_flg.append(flg_1)
-        # TODO: Alterar
-        atividades_feitas = 0
-        # atividades_feitas = list_flg.count("SIM")
+        list_flg = []
+        list_flg.append(flg_1)
+        atividades_feitas = list_flg.count("SIM")
 
         # Download the photo
         response = requests.get(foto)
@@ -87,10 +88,10 @@ for email in alunos["E-mail"].unique():
         circular_image.paste(image, (0, 0), mask=mask)
 
         # Get background
-        # if flg == "SIMNÃONÃONÃONÃONÃONÃO":
-        #     background = ImageCreation().get_background(rf"fundos/semana_1.jpeg")
-        # TODO: Alterar
-        background = ImageCreation().get_background(rf"fundos/{semana}.jpeg")
+        if flg == "SIM":
+            background = ImageCreation().get_background(rf"fundos/{semana}_sim.jpeg")
+        else:
+            background = ImageCreation().get_background(rf"fundos/{semana}_nao.jpeg")
 
         # Paste the circular image onto the background
         background.paste(circular_image, (20, 80), circular_image)
