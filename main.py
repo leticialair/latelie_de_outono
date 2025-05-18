@@ -10,7 +10,7 @@ from unidecode import unidecode
 sys.path.append(os.getcwd())
 from classes.class_image_creation import ImageCreation
 
-semana = "semana7"
+semana = "semana8"
 alunos = pd.read_excel("alunos.xlsx")
 
 # Removendo acentos e caracteres especiais
@@ -22,7 +22,15 @@ alunos["Nome para o Cartão de Conquistas"] = (
 )
 
 # Padronizando colunas de flag
-atividade_columns = ["Atvd. 1", "Atvd. 2", "Atvd. 3", "Atvd. 4", "Atvd. 5", "Atvd. 6"]
+atividade_columns = [
+    "Atvd. 1",
+    "Atvd. 2",
+    "Atvd. 3",
+    "Atvd. 4",
+    "Atvd. 5",
+    "Atvd. 6",
+    "Atvd. 7",
+]
 for column in atividade_columns:
     alunos[column] = alunos[column].astype(str).str.upper().str.strip()
     # Transformando NAN em NÃO
@@ -36,6 +44,7 @@ alunos["flag"] = (
     + alunos["Atvd. 4"]
     + alunos["Atvd. 5"]
     + alunos["Atvd. 6"]
+    + alunos["Atvd. 7"]
 )
 
 
@@ -69,6 +78,7 @@ for email in alunos["E-mail"].unique():
         flg_4 = alunos[alunos["E-mail"] == email]["Atvd. 4"].values[0]
         flg_5 = alunos[alunos["E-mail"] == email]["Atvd. 5"].values[0]
         flg_6 = alunos[alunos["E-mail"] == email]["Atvd. 6"].values[0]
+        flg_7 = alunos[alunos["E-mail"] == email]["Atvd. 7"].values[0]
 
         list_flg = []
         list_flg.append(flg_1)
@@ -77,6 +87,7 @@ for email in alunos["E-mail"].unique():
         list_flg.append(flg_4)
         list_flg.append(flg_5)
         list_flg.append(flg_6)
+        list_flg.append(flg_7)
         atividades_feitas = list_flg.count("SIM")
 
         # Download the photo
@@ -102,58 +113,36 @@ for email in alunos["E-mail"].unique():
         circular_image.paste(image, (0, 0), mask=mask)
 
         # Get background
-        if flg == "NÃONÃONÃONÃONÃONÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_naonaonaonaonaonao.jpeg"
-            )
-        elif flg == "SIMSIMSIMSIMSIMSIM":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimsimsimsim.jpeg"
-            )
-        elif flg == "SIMSIMSIMSIMNÃONÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimsimnaonao.jpeg"
-            )
-        elif flg == "SIMSIMSIMNÃONÃONÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimnaonaonao.jpeg"
-            )
-        elif flg == "SIMSIMNÃOSIMSIMSIM":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimnaosimsimsim.jpeg"
-            )
-        elif flg == "SIMNÃONÃONÃOSIMNÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simnaonaonaosimnao.jpeg"
-            )
-        elif flg == "SIMSIMNÃONÃONÃONÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimnaonaonaonao.jpeg"
-            )
-        elif flg == "SIMSIMSIMSIMSIMNÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimsimsimnao.jpeg"
-            )
-        elif flg == "SIMSIMSIMNÃONÃOSIM":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimnaonaosim.jpeg"
-            )
-        elif flg == "SIMNÃONÃONÃONÃONÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simnaonaonaonaonao.jpeg"
-            )
-        elif flg == "SIMSIMNÃONÃOSIMNÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimnaonaosimnao.jpeg"
-            )
-        elif flg == "SIMNÃOSIMNÃOSIMSIM":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simnaosimnaosimsim.jpeg"
-            )
-        elif flg == "SIMSIMSIMNÃOSIMNÃO":
-            background = ImageCreation().get_background(
-                rf"fundos/{semana}_simsimsimnaosimnao.jpeg"
-            )
+        if flg == "NÃONÃONÃONÃONÃONÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_1.jpeg")
+        elif flg == "SIMSIMSIMSIMSIMSIMSIM":
+            background = ImageCreation().get_background(rf"fundos/{semana}_2.jpeg")
+        elif flg == "SIMSIMSIMSIMNÃONÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_3.jpeg")
+        elif flg == "SIMSIMSIMNÃONÃONÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_4.jpeg")
+        elif flg == "SIMSIMNÃOSIMSIMSIMNÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_5.jpeg")
+        elif flg == "SIMNÃONÃONÃOSIMNÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_6.jpeg")
+        elif flg == "SIMSIMNÃONÃONÃONÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_7.jpeg")
+        elif flg == "SIMSIMSIMSIMSIMNÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_8.jpeg")
+        elif flg == "SIMSIMSIMNÃONÃOSIMSIM":
+            background = ImageCreation().get_background(rf"fundos/{semana}_9.jpeg")
+        elif flg == "SIMNÃONÃONÃONÃONÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_10.jpeg")
+        elif flg == "SIMSIMNÃONÃOSIMNÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_11.jpeg")
+        elif flg == "SIMSIMSIMSIMSIMSIMNÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_12.jpeg")
+        elif flg == "SIMNÃOSIMNÃOSIMSIMSIM":
+            background = ImageCreation().get_background(rf"fundos/{semana}_13.jpeg")
+        elif flg == "SIMSIMSIMSIMSIMNÃOSIM":
+            background = ImageCreation().get_background(rf"fundos/{semana}_14.jpeg")
+        elif flg == "SIMSIMSIMNÃOSIMNÃONÃO":
+            background = ImageCreation().get_background(rf"fundos/{semana}_15.jpeg")
 
         # Paste the circular image onto the background
         background.paste(circular_image, (20, 80), circular_image)
